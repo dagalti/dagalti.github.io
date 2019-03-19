@@ -102,7 +102,10 @@ height:0 !important;
       <div class="slider" :style="'transform:translateX('+activetab*tabwidth+'px)'"></div>
     </div>
 
-   <div ref="tcon" class="tabcontainer" @pointerdown="start($event)" @pointermove="move($event)" @pointerup="end($event)" >
+   <div ref="tcon" class="tabcontainer" v-on="pointer
+ ?{pointerdown: ($event)=>start($event), pointermove: ($event)=>move($event), pointerup: ($event)=>end($event)} 
+ :{touchstart: ($event)=>start($event), touchmove: ($event)=>move($event), touchend: ($event)=>end($event)}"
+ >
       <transition :name="transition" v-for="(tab, index) in items" :key="index">
         <div class="tabpane" v-if="index === activetab">
           {{tab}} : Tab Content
@@ -126,6 +129,12 @@ height:0 !important;
   },
  mounted(){
   this.$refs.tabbar.style.setProperty('--tabwidth', this.tabwidth+'px')
+ },
+ computed:{
+   pointer(){
+      if(window.PointerEvent) return true
+      else return false
+   }
  },
  methods: {
    switchtab(n){
